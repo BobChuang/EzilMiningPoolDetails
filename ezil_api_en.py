@@ -199,6 +199,6 @@ class API:
 
 
 if __name__ == "__main__":
-    a = API("0x426a77C7F2d74331e328B53281234fB6803D18F7", "zil1d5x96nvdl6fy2l3yk92uppj3tle6us73apvluc", 60)
+    a = API("", "", 60)
     a.get_data()
 
