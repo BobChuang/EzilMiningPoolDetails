@@ -25,7 +25,7 @@ class API:
         self.url_balance = f"https://billing.ezil.me/balances/{eth_address}.{zil_address}"
         self.url_hashrate = f"https://stats.ezil.me/current_stats/{eth_address}.{zil_address}/reported"
         self.url_workers = f"https://stats.ezil.me/current_stats/{eth_address}.{zil_address}/workers"  
-        self.personal_stats = f"https://calculator.ezil.me/api/ezil_calculator?hashrate=431922591&scale=1"  
+        self.personal_stats = f"https://calculator.ezil.me/api/ezil_calculator?scale=1&hashrate="  
         self.rates = f"https://billing.ezil.me/rates"
         self.eth_reward = f"https://billing.ezil.me/rewards/{eth_address}.{zil_address}?per_page=20&coin=eth&page="
         self.zil_reward = f"https://billing.ezil.me/rewards/{eth_address}.{zil_address}?per_page=10&coin=zil&page="
@@ -46,7 +46,7 @@ class API:
                 # print(worker_data)
                 rates_data = self.session.get(self.rates).json()
                 # print(rates_data)
-                personal_data = self.session.get(self.personal_stats).json()
+                personal_data = self.session.get(f"{self.personal_stats}{hashrate_data['reported_hashrate']}").json()
                 # print(personal_data)
 
                 current_time = str(int(time.time()))
@@ -64,7 +64,7 @@ class API:
                     eth_reward_data = self.session.get(f"{self.eth_reward}{eth_page}").json()
                     # print(eth_reward_data)
                     for eth_reward in eth_reward_data:
-                        time_stap = time.strftime("%Y-%m-%d", time.localtime(int(time.mktime(time.strptime(eth_reward['created_at'], "%Y-%m-%dT%H:%M:%SZ"))) + 60*60*8))
+                        time_stap = time.strftime("%Y-%m-%d", time.localtime(int(time.mktime(time.strptime(eth_reward['created_at'], "%Y-%m-%dT%H:%M:%SZ")))))
                         if time_stap == time.strftime("%Y-%m-%d", time.localtime()):
                             today_eth_reward_list.append(as_num(eth_reward['amount']))
                         if time_stap == time.strftime("%Y-%m-%d", time.localtime(int(time.time()) - 60*60*24)):
@@ -95,7 +95,7 @@ class API:
                     zil_reward_data = self.session.get(f"{self.zil_reward}{zil_page}").json()
                     # print(zil_reward_data)
                     for zil_reward in zil_reward_data:
-                        time_stap = time.strftime("%Y-%m-%d", time.localtime(int(time.mktime(time.strptime(zil_reward['created_at'], "%Y-%m-%dT%H:%M:%SZ"))) + 60*60*8))
+                        time_stap = time.strftime("%Y-%m-%d", time.localtime(int(time.mktime(time.strptime(zil_reward['created_at'], "%Y-%m-%dT%H:%M:%SZ")))))
                         if time_stap == time.strftime("%Y-%m-%d", time.localtime()):
                             today_zil_reward_list.append(as_num(zil_reward['amount']))
                         if time_stap == time.strftime("%Y-%m-%d", time.localtime(int(time.time()) - 60*60*24)):
@@ -199,6 +199,6 @@ class API:
 
 
 if __name__ == "__main__":
-    a = API("", "", 60)
+    a = API("0x426a77C7F2d74331e328B53281234fB6803D18F7", "zil1d5x96nvdl6fy2l3yk92uppj3tle6us73apvluc", 60)
     a.get_data()
 
